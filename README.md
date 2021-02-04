@@ -1,4 +1,2 @@
 # WAVReader
-A wav file information extractor 
-
-Clone with https: 
+A wav file information extractor  
