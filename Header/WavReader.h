@@ -8,11 +8,12 @@
 
 using namespace std;
 
-namespace wavReader{
+namespace WavReader{
 
-  /* List of header info                    */
-  /* The following comments are taken from  */
-  /* https://docs.fileformat.com/audio/wav/ */
+  /* List of header info                   */ 
+  /* The following comments are taken from */
+  /*https://docs.fileformat.com/audio/wav/ */
+
   struct wavFileInfo {
 
     /* BLOCK : File Declaration */
@@ -32,12 +33,12 @@ namespace wavReader{
 
     /* BLOCK : Data */
     char      Subchunk2ID[4];  /* 4 bytes :  “data” chunk header. Marks the beginning of the data section. */
-    uint32_t  DataSize;         /* 4 bytes :  File size (data)	Size of the data section. */
+    uint32_t  DataSize;        /* 4 bytes :  File size (data)	Size of the data section. */
   };
 
-  /* Location of the header information in bytes
-  Ex : FileTypeBlocID starts at 0  and ends at 4
-  Ex : NbrCanaux      starts at 22 and ends at 24 */
+  /* Location of the header information in bytes     */
+  /* Ex : FileTypeBlocID starts at 0  and ends at 4  */
+  /* Ex : NbrCanaux      starts at 22 and ends at 24 */
   const uint64_t headerValueIndex[] = { 0, 4, 8, 12, 16, 20, 22, 24, 28, 32, 34, 36, 40, 44 };
 
   /* Class Wav File */
@@ -51,12 +52,20 @@ namespace wavReader{
     void openFile();
     void parseHeader();
     void initWavFile();
-    void closeFile();
 
     public:
-      WavFile();
-      WavFile(string file);
-      inline wavFileInfo getWavFileInfo() { return fileInfo; }
+      WavFile();                      /* Default Constructor */
+      WavFile(const string file);     /* Constructor with absolute path as const string*/
+      WavFile(const WavFile& file);   /* Copy Constructor */
+      WavFile(const WavFile&& file);  /* Move Consutructor */
+      ~WavFile();                     /* Destructor */
+
+    public:
+      inline void        setFileName(const string name) { fileName = name; } /* Set */
+
+    public:
+      inline string      getFileName()    { return fileName; }               /* Get */
+      inline wavFileInfo getWavFileInfo() { return fileInfo; }               /* Get */
   };
 }
 

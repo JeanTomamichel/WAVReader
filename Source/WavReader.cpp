@@ -1,17 +1,37 @@
 #include "../Header/WavReader.h"
-using namespace wavReader;
+using namespace WavReader;
 
 /* Default Constructor */
-WavFile::WavFile() {
-  cout << "Enter Wav File Absolute Path" << endl;
-  cin >> fileName;
+WavFile::WavFile() 
+{
+  cout << "Default WavFile constructor called ! " << endl; 
+  cout << "Please enter Wav File Absolute Path  " << endl;
+  cin  >> fileName;
+
   initWavFile();
 }
 
-/* Overloaded Constructor with    */
-/* input file name as string type */
-WavFile::WavFile(string file) : fileName(file) { 
+/* Const string constructor */
+WavFile::WavFile(const string file) : fileName(file) 
+{ 
+  cout << "Const string constructor called " << endl; 
   initWavFile(); 
+}
+
+/* Copy Constructor */
+WavFile::WavFile(const WavFile& file) : fileName(file.fileName)
+{
+  cout << "Copy Constructor Called " << endl; 
+  cout << fileName << endl;
+
+  initWavFile(); 
+}
+
+/* Move Constructor */
+WavFile::WavFile(const WavFile&& file) : fileName(file.fileName) 
+{
+  cout << "Move Constructor Called" << endl; 
+  cout << fileName << endl; 
 }
 
 /* Verify .WAV or .wav extension */
@@ -30,7 +50,7 @@ void WavFile::verifyExtension() {
     cout << " Wav extension found ! " << endl;
   }
   else {
-    cout << "Not the right extension, the software only supports WAV sorry ! " << endl;
+    cout << "Not the right extension, the software only supports .WAV, sorry ! " << endl;
     throw exception("Not a wav file");
   } 
 }
@@ -66,8 +86,8 @@ void WavFile::parseHeader() {
 
   /* Get header bytes in an array */
   fileHandle.seekg(0, ios::beg);
-  char* headerMemory = new char[headerSize+4];    /* Memory */
-  fileHandle.read(headerMemory, 48); 
+  char* headerMemory = new char[headerSize];    /* Memory */
+  fileHandle.read(headerMemory, 4); 
 
   /* Collect Info into wav file info struct */
   memcpy(&(fileInfo.ChunkID[0]     ), &headerMemory[headerValueIndex[0] ], headerValueIndex[1]  - headerValueIndex[0] );
@@ -84,17 +104,20 @@ void WavFile::parseHeader() {
   memcpy(&(fileInfo.Subchunk2ID[0] ), &headerMemory[headerValueIndex[11]], headerValueIndex[12] - headerValueIndex[11]);
   memcpy(&(fileInfo.DataSize       ), &headerMemory[headerValueIndex[12]], headerValueIndex[13] - headerValueIndex[12]);
 
-
+  /* delete header memory */
   delete[] headerMemory; 
 }
 
-void WavFile::closeFile() {
-  fileHandle.close();
-  if (!fileHandle.is_open()) {
-    cout << fileName << " has been successfully closed ! " << endl;
-  }
-  else {
-    throw exception("Can't close file");
+WavFile::~WavFile() {
+  cout << "Destructor Called" << endl;
+
+  /* close file */
+  if (!fileHandle.is_open())
+  {
+    fileHandle.close();
+    if (!fileHandle.is_open()) {
+      cout << fileName << " has been successfully closed ! " << endl;
+    }
   }
 }
 
@@ -108,9 +131,4 @@ void WavFile::initWavFile() {
 
   /* Parse file Header */
   parseHeader(); 
-
-
-
-  /* Close file*/
-  closeFile(); 
 }
