@@ -1,2 +1,2 @@
 # WAVReader
-A wav file information extractor 
+A wav file information extractor  
