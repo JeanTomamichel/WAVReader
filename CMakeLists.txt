@@ -16,7 +16,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Header/WavReaderConfig.h.in ${CMAKE_CURRENT_SOURCE_DIR}/Header/WavReaderConfig.h)
 
 set(SOURCE 
-	${CMAKE_CURRENT_SOURCE_DIR}/Source/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Source/WavReader.cpp
 	)
 
